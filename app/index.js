@@ -1,5 +1,7 @@
 var generators = require('yeoman-generator');
 var chalk = require('chalk');
+var clean = require('gulp-clean');
+
 
 module.exports = generators.Base.extend({
   constructor: function () {
@@ -28,7 +30,7 @@ module.exports = generators.Base.extend({
         message: 'Would you like to enable support for MS SQL?',
         default: true,
       }]).then(function (answers) {
-        this.appname = answers.name.toLowerCase();
+        this.appname = answers.name.toLowerCase().replace(' ', '-');
         // update configuration
         this.props.name = this.appname;
         this.props.usemssql = answers.usemssql;
@@ -71,6 +73,9 @@ module.exports = generators.Base.extend({
     }
   },
   install: {
+    cleanNodeModules: function() {
+
+    },
     addPackages: function() {
       if(this.props.usemssql) {
         this.npmInstall(['mssql'], { 'save': true });
