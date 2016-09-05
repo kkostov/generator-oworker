@@ -1,4 +1,5 @@
 var generators = require('yeoman-generator');
+var glob = require("glob");
 
 module.exports = generators.Base.extend({
   constructor: function () {
@@ -13,15 +14,34 @@ module.exports = generators.Base.extend({
         type: 'input',
         name: 'name',
         message: 'What is the name of the worker project?',
-        default: this.appname,
+        default: this.props.appname,
       }]).then(function (answers) {
-        this.appname = answers.name;
+        this.props.appname = answers.name;
       }.bind(this));
     }
   },
   writing: {
-    packagejson: function () {
-      this.fs.copyTpl(this.templatePath('package.json'), this.destinationPath('package.json'), {namespace: this.appname});
+    configfiles: function () {
+      this.fs.copyTpl(
+        this.templatePath('package.json'),
+        this.destinationPath('package.json'), {
+          projectName: this.props.appname.toLowerCase()
+        });
+      this.fs.copy(this.templatePath('.gitignore'), this.destinationPath('.gitignore'));
+    },
+    projectFiles: function () {
+      var files = glob.sync(this.sourceRoot() + '/**/*');
+      var ignores = [
+        '.git',
+        'LICENSE',
+        'README.md',
+      ];
+      files.forEach(function (file) {
+        if (ignores.indexOf(file) !== -1) {
+          return;
+        }
+        this.copy(file, file);
+      }, this);
     }
   }
 })

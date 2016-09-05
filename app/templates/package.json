@@ -1,5 +1,5 @@
 {
-  "name": "<%= namespace.toLowerCase() %>",
+  "name": "<%= projectName %>",
   "version": "0.0.0",
   "description": "A worker project.",
   "main": "dist",
