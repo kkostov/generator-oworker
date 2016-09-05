@@ -7,8 +7,21 @@ module.exports = generators.Base.extend({
 
     //this.option('coffee');  adds support for a --coffee flag
   },
-  method1: function () {
-    console.log('method 1 executed');
-    
+  prompting: {
+    questions: function () {
+      return this.prompt([{
+        type: 'input',
+        name: 'name',
+        message: 'What is the name of the worker project?',
+        default: this.appname,
+      }]).then(function (answers) {
+        this.appname = answers.name;
+      }.bind(this));
+    }
+  },
+  writing: {
+    packagejson: function () {
+      this.fs.copyTpl(this.templatePath('package.json'), this.destinationPath('package.json'), {namespace: this.appname});
+    }
   }
-});
+})
