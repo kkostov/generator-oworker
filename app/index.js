@@ -13,7 +13,7 @@ module.exports = generators.Base.extend({
     };
   },
   initializing: function () {
-    console.log(chalk.blue('You are creating a new Worker service'));
+    // check current project state and get configs
   },
   prompting: {
     questions: function () {
@@ -73,12 +73,10 @@ module.exports = generators.Base.extend({
   install: {
     addPackages: function() {
       if(this.props.usemssql) {
-        console.log(chalk.blue('adding mssql to the solution'));
         this.npmInstall(['mssql'], { 'save': true });
       }
     },
     installAll: function() {
-      console.log(chalk.blue('starting npm install'));
       this.npmInstall();
     }
   }

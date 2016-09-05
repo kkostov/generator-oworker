@@ -2,10 +2,10 @@
 import sql from 'mssql';
 
 const dbConfiguration = {
-    user: 'ugdbm',
-    password: 'ebm4589',
-    server: 'KKOSTOV-PC',
-    database: 'UltraGendaPro',
+    user: '',
+    password: '',
+    server: '', // use hostname//name for named instances
+    database: '',
     port: '1433',
     requestTimeout: '5000'
 }
