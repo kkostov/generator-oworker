@@ -1,0 +1,9 @@
+rabbit1:
+  image: rabbitmq:3-management
+  hostname: rabbit1 # by default used as node name
+  labels:
+    NAME: "rabbitmqdev"
+  restart: always
+  ports:
+  - 5672:5672 #daemon, can be public
+  - 15672:15672 #management interface, default username/password guest/gues

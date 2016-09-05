@@ -11,7 +11,8 @@ module.exports = generators.Base.extend({
     // default configuration
     this.props = {
       name: this.appname,
-      usemssql: false
+      usemssql: false,
+      usedocker: false
     };
   },
   initializing: function () {
@@ -25,16 +26,22 @@ module.exports = generators.Base.extend({
         message: 'What is the name of the worker project?',
         default: this.appname,
       }, {
-        type: 'confirm',
-        name: 'usemssql',
-        message: 'Would you like to enable support for MS SQL?',
-        default: true,
-      }]).then(function (answers) {
-        this.appname = answers.name.toLowerCase().replace(' ', '-');
-        // update configuration
-        this.props.name = this.appname;
-        this.props.usemssql = answers.usemssql;
-      }.bind(this));
+          type: 'confirm',
+          name: 'usemssql',
+          message: 'Would you like to enable support for MS SQL?',
+          default: true,
+        }, {
+          type: 'confirm',
+          name: 'usedocker',
+          message: 'Would you like to add a docker container for local development?',
+          default: true,
+        }]).then(function (answers) {
+          this.appname = answers.name.toLowerCase().replace(' ', '-');
+          // update configuration
+          this.props.name = this.appname;
+          this.props.usemssql = answers.usemssql;
+          this.props.usedocker = answers.usedocker;
+        }.bind(this));
     }
   },
   writing: {
@@ -49,39 +56,44 @@ module.exports = generators.Base.extend({
 
       // app settings
       this.fs.copy(this.templatePath('src/config.json'), this.destinationPath('src/config.json'));
+
+      if (this.props.usedocker) {
+        // docker compose
+        this.fs.copy(this.templatePath('docker-compose.yml'), this.destinationPath('docker-compose.yml'));
+      }
     },
-    serverFiles: function() {
+    serverFiles: function () {
       this.fs.copy(this.templatePath('src/index.js'), this.destinationPath('src/index.js'));
       this.fs.copyTpl(
         this.templatePath('src/db.js'),
         this.destinationPath('src/db.js'), this.props);
     },
-    utilFiles: function() {
+    utilFiles: function () {
       this.fs.copy(this.templatePath('src/lib/util.js'), this.destinationPath('src/lib/util.js'));
     },
-    middlewareFiles: function() {
+    middlewareFiles: function () {
       this.fs.copy(this.templatePath('src/middleware/index.js'), this.destinationPath('src/middleware/index.js'));
     },
-    modelFiles: function() {
+    modelFiles: function () {
       // models are db dependant entities so we only add them if mssql was enabled
-      if(this.props.usemssql) {
+      if (this.props.usemssql) {
         this.fs.copy(this.templatePath('src/models/user.js'), this.destinationPath('src/models/user.js'));
-      }      
+      }
     },
-    apiFiles: function() {
+    apiFiles: function () {
       this.fs.copy(this.templatePath('src/api/index.js'), this.destinationPath('src/api/index.js'));
     }
   },
   install: {
-    cleanNodeModules: function() {
+    cleanNodeModules: function () {
 
     },
-    addPackages: function() {
-      if(this.props.usemssql) {
+    addPackages: function () {
+      if (this.props.usemssql) {
         this.npmInstall(['mssql'], { 'save': true });
       }
     },
-    installAll: function() {
+    installAll: function () {
       this.npmInstall();
     }
   }

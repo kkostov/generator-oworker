@@ -5,12 +5,14 @@ var assert = require('yeoman-assert');
 
 var defaultPromts = {
   name: 'testappname',
-  usemssql: false
+  usemssql: false,
+  usedocker: false
 }
 
-var withMSSqlPromts = {
+var withYesPromts = {
   name: 'testappname',
-  usemssql: true
+  usemssql: true,
+  usedocker: true
 }
 
 describe('generator', function () {
@@ -36,6 +38,32 @@ describe('generator', function () {
 
     it('generate src/config.json', function () {
       assert.file(['src/config.json']);
+    });
+
+
+
+    describe('when docker is enabled', function () {
+      before(function () {
+        return helpers.run(path.join(__dirname, '../app')) //.withOptions({ foo: 'bar' })    // Mock options passed in //.withArguments(['name-x'])      // Mock the arguments
+          .withPrompts(withYesPromts) // Mock the prompt answers
+          .toPromise();
+      });
+
+      it('generate docker compose', function () {
+        assert.file(['docker-compose.yml']);
+      });
+    });
+
+    describe('when docker is enabled', function () {
+      before(function () {
+        return helpers.run(path.join(__dirname, '../app')) //.withOptions({ foo: 'bar' })    // Mock options passed in //.withArguments(['name-x'])      // Mock the arguments
+          .withPrompts(defaultPromts) // Mock the prompt answers
+          .toPromise();
+      });
+
+      it('does not generate docker compose', function () {
+        assert.noFile(['docker-compose.yml']);
+      });
     });
   });
 
@@ -100,7 +128,7 @@ describe('generator', function () {
     describe('when mssql is enabled', function () {
       before(function () {
         return helpers.run(path.join(__dirname, '../app')) //.withOptions({ foo: 'bar' })    // Mock options passed in //.withArguments(['name-x'])      // Mock the arguments
-          .withPrompts(withMSSqlPromts) // Mock the prompt answers
+          .withPrompts(withYesPromts) // Mock the prompt answers
           .toPromise();
       });
 
