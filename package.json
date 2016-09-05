@@ -1,0 +1,18 @@
+{
+  "name": "generator-oworker",
+  "version": "1.0.0",
+  "description": "A generator to scafold a worker service project",
+  "files": [
+    "app",
+    "router"
+  ],
+  "keywords": [
+    "yeoman-generator",
+    "generator-oworker",
+    "oworker"
+  ],
+  "dependencies": {
+    "chalk": "^1.1.3",
+    "yeoman-generator": "^0.24.1"
+  }
+}
