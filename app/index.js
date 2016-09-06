@@ -69,7 +69,7 @@ module.exports = generators.Base.extend({
       }
     },
     serverFiles: function () {
-      this.fs.copy(this.templatePath('src/index.js'), this.destinationPath('src/index.js'));
+      this.fs.copyTpl(this.templatePath('src/index.js'), this.destinationPath('src/index.js'), this.props);
       this.fs.copyTpl(
         this.templatePath('src/db.js'),
         this.destinationPath('src/db.js'), this.props);
@@ -90,7 +90,7 @@ module.exports = generators.Base.extend({
       }
     },
     apiFiles: function () {
-      this.fs.copy(this.templatePath('src/api/index.js'), this.destinationPath('src/api/index.js'));
+      this.fs.copyTpl(this.templatePath('src/api/index.js'), this.destinationPath('src/api/index.js'), this.props);
     }
   },
   install: {
@@ -100,6 +100,9 @@ module.exports = generators.Base.extend({
     addPackages: function () {
       if (this.props.usemssql) {
         this.npmInstall(['mssql'], { 'save': true });
+      }
+      if(this.props.userabbitmq) {
+        this.npmInstall(['amqplib'], {'save': true});
       }
     },
     installAll: function () {

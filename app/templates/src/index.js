@@ -6,6 +6,9 @@ import initializeDb from './db';
 import middleware from './middleware';
 import api from './api';
 import config from './config.json';
+<% if (userabbitmq) { %>
+import Listener from './middleware/rabbitmq/listener';
+<% } %>
 
 let app = express();
 app.server = http.createServer(app);
