@@ -73,6 +73,7 @@ module.exports = generators.Base.extend({
     },
     middlewareFiles: function () {
       this.fs.copy(this.templatePath('src/middleware/index.js'), this.destinationPath('src/middleware/index.js'));
+      this.fs.copy(this.templatePath('src/middleware/rabbitmq/listener.js'), this.destinationPath('src/middleware/rabbitmq/listener.js'));
     },
     modelFiles: function () {
       // models are db dependant entities so we only add them if mssql was enabled

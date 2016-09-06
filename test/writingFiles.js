@@ -152,4 +152,18 @@ describe('generator', function () {
   });
 
 
+  describe('when rabbit mq listener is enabled', function() {
+    before(function () {
+      return helpers.run(path.join(__dirname, '../app')) //.withOptions({ foo: 'bar' })    // Mock options passed in //.withArguments(['name-x'])      // Mock the arguments
+        .withPrompts(withYesPromts) // Mock the prompt answers
+        .toPromise();
+    });
+
+    it('generate a src/middleware/rabbitmq/listener.js file', function () {
+      assert.file(['src/middleware/rabbitmq/listener.js']);
+    });
+
+  });
+
+
 });
