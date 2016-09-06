@@ -19,6 +19,11 @@ app.use(bodyParser.json({
 	limit : config.bodyLimit
 }));
 
+<% if (userabbitmq) { %>
+// rabbitmq
+let listener = new Listener({hostname: 'amqp://localhost'});
+listener.connect();
+<% } %>
 
 // connect to db
 initializeDb( db => {

@@ -6,13 +6,15 @@ var assert = require('yeoman-assert');
 var defaultPromts = {
   name: 'testappname',
   usemssql: false,
-  usedocker: false
+  usedocker: false,
+  userabbitmq: false
 }
 
 var withYesPromts = {
   name: 'testappname',
   usemssql: true,
-  usedocker: true
+  usedocker: true,
+  userabbitmq: true
 }
 
 describe('generator', function () {
@@ -152,7 +154,7 @@ describe('generator', function () {
   });
 
 
-  describe('when rabbit mq listener is enabled', function() {
+  describe('when rabbit mq is enabled', function() {
     before(function () {
       return helpers.run(path.join(__dirname, '../app')) //.withOptions({ foo: 'bar' })    // Mock options passed in //.withArguments(['name-x'])      // Mock the arguments
         .withPrompts(withYesPromts) // Mock the prompt answers
@@ -165,5 +167,18 @@ describe('generator', function () {
 
   });
 
+
+  describe('when rabbit mq is disabled', function() {
+    before(function () {
+      return helpers.run(path.join(__dirname, '../app')) //.withOptions({ foo: 'bar' })    // Mock options passed in //.withArguments(['name-x'])      // Mock the arguments
+        .withPrompts(defaultPromts) // Mock the prompt answers
+        .toPromise();
+    });
+
+    it('generate a src/middleware/rabbitmq/listener.js file', function () {
+      assert.noFile(['src/middleware/rabbitmq/listener.js']);
+    });
+
+  });
 
 });

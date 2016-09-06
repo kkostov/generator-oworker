@@ -35,12 +35,18 @@ module.exports = generators.Base.extend({
           name: 'usedocker',
           message: 'Would you like to add a docker container for local development?',
           default: true,
+        }, {
+          type: 'confirm',
+          name: 'userabbitmq',
+          message: 'Would you like to enable a RabbitMQ?',
+          default: true,
         }]).then(function (answers) {
           this.appname = answers.name.toLowerCase().replace(' ', '-');
           // update configuration
           this.props.name = this.appname;
           this.props.usemssql = answers.usemssql;
           this.props.usedocker = answers.usedocker;
+          this.props.userabbitmq = answers.userabbitmq;
         }.bind(this));
     }
   },
@@ -73,7 +79,9 @@ module.exports = generators.Base.extend({
     },
     middlewareFiles: function () {
       this.fs.copy(this.templatePath('src/middleware/index.js'), this.destinationPath('src/middleware/index.js'));
-      this.fs.copy(this.templatePath('src/middleware/rabbitmq/listener.js'), this.destinationPath('src/middleware/rabbitmq/listener.js'));
+      if(this.props.userabbitmq) {
+        this.fs.copy(this.templatePath('src/middleware/rabbitmq/listener.js'), this.destinationPath('src/middleware/rabbitmq/listener.js'));
+      }
     },
     modelFiles: function () {
       // models are db dependant entities so we only add them if mssql was enabled
